@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 '''
-all of these functions are written by Google, 
+all of these functions are written by Google,
 you can find it in the Google Detection API
 '''
-import tensorflow as tf
+from __future__ import absolute_import, division, print_function
+
 import numpy as np
+import tensorflow as tf
+
 
 def indices_to_dense_vector(indices,
                             size,

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, print_function, absolute_import
+from __future__ import absolute_import, division, print_function
+
 import os
 
-# root path
-ROOT_PATH = os.path.abspath(r'/home/konghaiyang/lm/FPN_Tensorflow')
+ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 
 # pretrain weights path
 TEST_SAVE_PATH = ROOT_PATH + '/tools/test_result'
@@ -11,23 +11,25 @@ INFERENCE_IMAGE_PATH = ROOT_PATH + '/tools/inference_image'
 INFERENCE_SAVE_PATH = ROOT_PATH + '/tools/inference_result'
 
 NET_NAME = 'resnet_v1_101'
-VERSION = 'v1_icecream'
+VERSION = 'v1_layer'
 CLASS_NUM = 1
 BASE_ANCHOR_SIZE_LIST = [15, 25, 40, 60, 80]
 LEVEL = ['P2', 'P3', 'P4', 'P5', "P6"]
 STRIDE = [4, 8, 16, 32, 64]
-ANCHOR_SCALES = [1.]
-ANCHOR_RATIOS = [1, 0.5, 2, 1 / 3., 3., 1.5, 1 / 1.5]
-SCALE_FACTORS = [10., 10., 5., 5.]
+ANCHOR_SCALES = [0.5, 1., 2.]
+# ANCHOR_RATIOS = [1, 0.5, 2, 1 / 3., 3., 1.5, 1 / 1.5]
+ANCHOR_RATIOS = [0.1, 0.2, 0.3]
+# SCALE_FACTORS = [10., 10., 5., 5.]
+SCALE_FACTORS = [10., 5., 1., 0.5]
 OUTPUT_STRIDE = 16
-SHORT_SIDE_LEN = 600
-DATASET_NAME = 'icecream'
+SHORT_SIDE_LEN = 640
+DATASET_NAME = 'layer'
 
 BATCH_SIZE = 1
 WEIGHT_DECAY = {'resnet_v1_50': 0.0001, 'resnet_v1_101': 0.0001}
 EPSILON = 1e-5
 MOMENTUM = 0.9
-MAX_ITERATION = 50000
+MAX_ITERATION = 70000
 GPU_GROUP = "1"
 LR = 0.001
 
@@ -35,7 +37,7 @@ LR = 0.001
 SHARE_HEAD = True
 RPN_NMS_IOU_THRESHOLD = 0.5
 MAX_PROPOSAL_NUM = 2000
-RPN_IOU_POSITIVE_THRESHOLD = 0.5
+RPN_IOU_POSITIVE_THRESHOLD = 0.7
 RPN_IOU_NEGATIVE_THRESHOLD = 0.2
 RPN_MINIBATCH_SIZE = 512
 RPN_POSITIVE_RATE = 0.5
@@ -53,4 +55,3 @@ FINAL_SCORE_THRESHOLD = 0.5
 FAST_RCNN_IOU_POSITIVE_THRESHOLD = 0.45
 FAST_RCNN_MINIBATCH_SIZE = 256
 FAST_RCNN_POSITIVE_RATE = 0.5
-

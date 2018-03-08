@@ -5,18 +5,18 @@ import xml.etree.cElementTree as ET
 import cv2
 import PIL
 import copy
+from tqdm import tqdm
 
-template_file = 'anno.xml'
-# 生成的xml文件保存的路径
-target_dir = '/home/konghaiyang/lm/FPN_Tensorflow/data/icecream/Annotations/'
-# 所有图片的路径
-image_dir = '/home/konghaiyang/lm/FPN_Tensorflow/data/icecream/JPEGImages/'
+from libs.configs import cfgs
 
-anno_dir = '/home/konghaiyang/data/icecream/annotations/'
+template_file = 'sample.xml'
+target_dir = os.path.join(cfgs.ROOT_PATH, 'data/layer/Annotations/')
+image_dir = os.path.join(cfgs.ROOT_PATH, 'data/layer/JPEGImages/')
+anno_dir = os.path.join(cfgs.ROOT_PATH, 'data/layer/annotations/')
 
 anno_files = [os.path.join(anno_dir, f) for f in os.listdir(anno_dir) if f.endswith('.txt')]
 
-for af in anno_files:
+for af in tqdm(anno_files):
   with open(af) as f:
     anno_lines = [f.strip() for f in f.readlines()]
 
@@ -33,9 +33,6 @@ for af in anno_files:
   sz.find('height').text = str(im.shape[0])
   sz.find('width').text = str(im.shape[1])
   sz.find('depth').text = str(im.shape[2])
-
-  if im.shape[1] == 720:
-    print(af)
 
   # object
   obj_ori = root.find('object')
@@ -65,7 +62,5 @@ for af in anno_files:
   xml_file = image_file.replace('jpg', 'xml')
 
   tree.write(target_dir + xml_file, encoding='utf-8', xml_declaration=True)
-
-  print xml_file
 
 print 'Done'

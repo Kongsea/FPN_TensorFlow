@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-anno_dir = '/home/konghaiyang/data/icecream/annotations/'
+anno_dir = 'data/layer/annotations'
 
 anno_files = [os.path.join(anno_dir, f) for f in os.listdir(anno_dir) if f.endswith('txt')]
 
@@ -17,7 +17,7 @@ for af in anno_files:
 classes = list(set(classes))
 
 with open('classes.txt', 'w') as f:
-  for i, cls in enumerate(classes):
+  for i, cls in enumerate(classes, 1):
     if 'rotate' in cls:
       continue
     f.write('{}\n'.format(cls))

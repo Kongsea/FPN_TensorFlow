@@ -14,7 +14,7 @@ tf.app.flags.DEFINE_string(
 )
 tf.app.flags.DEFINE_integer(
     'new_img_size',
-    320,
+    640,
     'the value of new height and new width, new_height = new_width'
 )
 
@@ -23,30 +23,30 @@ tf.app.flags.DEFINE_integer(
 ##########################
 tf.app.flags.DEFINE_integer(
     'num_classes',
-    145,
+    1,
     'num of classes'
 )
 tf.app.flags.DEFINE_integer(
     'batch_size',
-    2, #64
+    1,  # 64
     'num of imgs in a batch'
 )
 tf.app.flags.DEFINE_integer(
     'val_batch_size',
-    2,
+    1,
     'val or test batch'
 )
 ###########################
-## learning rate
+# learning rate
 #########################
 tf.app.flags.DEFINE_float(
     'lr_begin',
-    0.001, # 0.01 # 0.001 for without prepocess
+    0.001,  # 0.01 # 0.001 for without prepocess
     'the value of learning rate start with'
 )
 tf.app.flags.DEFINE_integer(
     'decay_steps',
-    20000, # 5000
+    20000,  # 5000
     "after 'decay_steps' steps, learning rate begin decay"
 )
 tf.app.flags.DEFINE_float(
@@ -69,13 +69,14 @@ tf.app.flags.DEFINE_float(
 ########################
 tf.app.flags.DEFINE_integer(
     'max_steps',
-    4003,
+    50000,
     'max iterate steps'
 )
 
 tf.app.flags.DEFINE_string(
     'pretrained_model_path',
     '/home/konghaiyang/kong/pretrained_models/resnet_v1_101.ckpt',
+    # 'output-1/res101_trained_weights/v1_layer/voc_50000model.ckpt',
     'the path of pretrained weights'
 )
 tf.app.flags.DEFINE_float(
@@ -88,12 +89,12 @@ tf.app.flags.DEFINE_float(
 ##################################
 tf.app.flags.DEFINE_string(
     'summary_path',
-    '../output/res101_summary',
+    'output/res101_summary',
     'the path of summary write to '
 )
 tf.app.flags.DEFINE_string(
     'trained_checkpoint',
-    '../output/res101_trained_weights',
+    'output/res101_trained_weights',
     'the path to save trained_weights'
 )
 FLAGS = tf.app.flags.FLAGS

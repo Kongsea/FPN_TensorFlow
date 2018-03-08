@@ -44,9 +44,14 @@ Temporary Items
 
 # Add
 data/icecream/*
+data/layer/*
+output*/*
 *.xml
 *.jpg
 *.pyc
+*.pkl
+*.ckpt
+*.txt
 events*
 *.tif
 *model.ckpt*
