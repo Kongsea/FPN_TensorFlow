@@ -439,10 +439,10 @@ def parse_args():
   parser = argparse.ArgumentParser(description='Train a Fast R-CNN network')
   parser.add_argument('--src_folder', dest='src_folder',
                       help='images path',
-                      default='/home/konghaiyang/lm/FPN_Tensorflow/tools/inference_image', type=str)
+                      default='{}/tools/inference_image'.format(cfgs.ROOT_PATH), type=str)
   parser.add_argument('--des_folder', dest='des_folder',
                       help='output path',
-                      default='/home/konghaiyang/lm/FPN_Tensorflow/tools/image_out', type=str)
+                      default='{}/tools/image_out'.format(cfgs.ROOT_PATH), type=str)
   parser.add_argument('--det_th', dest='det_th',
                       help='detection threshold',
                       default=0.7,

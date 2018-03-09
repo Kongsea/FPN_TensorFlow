@@ -18,7 +18,7 @@ def get_restorer(test=True):
 
   if test:
     checkpoint_path = os.path.join(
-        cfgs.ROOT_PATH, 'output-1/res101_trained_weights/v1_layer/voc_50000model.ckpt')
+        cfgs.ROOT_PATH, 'output/res101_trained_weights/v1_layer/layer_70000model.ckpt')
   else:
     checkpoint_path = tf.train.latest_checkpoint(
         os.path.join(FLAGS.trained_checkpoint, cfgs.VERSION))

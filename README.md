@@ -1,7 +1,7 @@
 # Clone and modified from https://github.com/yangxue0827/FPN_Tensorflow
 ## Deleted some huge files from git source to keep it clean and easy to use.
 
-# How to use this repository to train your model using your own custom dataset
+# Train a model using your own custom dataset
 ## 1.Place your dataset files in `data/` folders, named `layer` for example
 ### 1.1 Place original images in `data/layer/JPEGImages` folder
 ### 1.2 Place original annotations in `data/layer/annotations` folder
@@ -32,7 +32,25 @@ batch_size
 ### 2.3 Add dataset name to `data/io/read_tfrecord.py`
 * line 1 of function `next_batch`
 ```Shell
-['nwpu', 'airplane', 'SSDD', 'ship', 'pascal', 'coco', 'layer']
+['nwpu', 'airplane', 'SSDD', 'ship', 'pascal', 'coco', 'icecream', 'layer']
+```
+### 2.4 Add your `NAME_LABEL_MAP` corresponding to your own dataset in `libs/label_name_dict/label_dict.py`
+* Directly add them if the number of classes is not big
+* Or Run `gen_classes.py` to generate classes in `classes.txt` and add `NAME_LABEL_MAP` using a file.
+* Examples:
+```Shell
+elif cfgs.DATASET_NAME == 'icecream':
+  NAME_LABEL_MAP = {}
+  NAME_LABEL_MAP['back_ground'] = 0
+  with open('classes.txt') as f:
+    lines = [line.strip() for line in f.readlines()]
+  for i, line in enumerate(lines, 1):
+    NAME_LABEL_MAP[line] = i
+elif cfgs.DATASET_NAME == 'layer':
+  NAME_LABEL_MAP = {
+      'back_ground': 0,
+      "layer": 1
+  }
 ```
 ## 3.Run `tools/train.py` to train the model and the `output` will be saved in the root directory
 ```Shell
@@ -63,7 +81,7 @@ UnknownError (see above for traceback): exceptions.OverflowError: signed integer
 	 [[Node: fast_rcnn_loss/PyFunc_1 = PyFunc[Tin=[DT_FLOAT, DT_FLOAT, DT_INT32], Tout=[DT_UINT8], token="pyfunc_7", _device="/job:localhost/replica:0/task:0/device:CPU:0"](rpn_losses/Squeeze/_1579, fast_rcnn_loss/mul_1/_1759, fast_rcnn_loss/strided_slice_1/_1761)]]
 	 [[Node: draw_proposals/Reshape_2/tensor/_1825 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device_incarnation=1, tensor_name="edge_3802_draw_proposals/Reshape_2/tensor", tensor_type=DT_UINT8, _device="/job:localhost/replica:0/task:0/device:GPU:0"]()]]
 ```
-* The reason of this error is same as `1.InvalidArgumentError`
+* The reason of this error is the same as `1.InvalidArgumentError`.
 
 # Feature Pyramid Networks for Object Detection
 A Tensorflow implementation of FPN detection framework.

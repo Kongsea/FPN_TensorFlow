@@ -59,7 +59,7 @@ elif cfgs.DATASET_NAME == 'pascal':
 elif cfgs.DATASET_NAME == 'icecream':
   NAME_LABEL_MAP = {}
   NAME_LABEL_MAP['back_ground'] = 0
-  with open('/home/konghaiyang/lm/FPN_Tensorflow/classes.txt') as f:
+  with open('classes.txt') as f:
     lines = [line.strip() for line in f.readlines()]
   for i, line in enumerate(lines, 1):
     NAME_LABEL_MAP[line] = i
@@ -68,10 +68,6 @@ elif cfgs.DATASET_NAME == 'layer':
       'back_ground': 0,
       "层": 1
   }
-#   with open('/home/konghaiyang/lm/FPN_Tensorflow/classes.txt') as f:
-#     lines = [line.strip() for line in f.readlines()]
-#   for i, line in enumerate(lines, 1):
-#     NAME_LABEL_MAP[line] = i
 else:
   assert 'please set label dict!'
 

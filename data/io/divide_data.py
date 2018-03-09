@@ -9,17 +9,18 @@ import sys
 
 sys.path.append('../../')
 
+from libs.configs import cfgs
+
 
 def mkdir(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
+  if not os.path.exists(path):
+    os.makedirs(path)
+
 
 divide_rate = 0.8
 
-root_path = '/home/konghaiyang/lm/FPN_Tensorflow/data'
-
-image_path = root_path + '/icecream/JPEGImages'
-xml_path = root_path + '/icecream/Annotations'
+image_path = os.path.join(cfgs.ROOT_PATH, 'data/{}/JPEGImages'.format(cfgs.DATASET_NAME))
+xml_path = os.path.join(cfgs.ROOT_PATH, 'data/{}/Annotations'.format(cfgs.DATASET_NAME))
 
 image_list = os.listdir(image_path)
 
@@ -30,29 +31,31 @@ random.shuffle(image_name)
 train_image = image_name[:int(math.ceil(len(image_name)) * divide_rate)]
 test_image = image_name[int(math.ceil(len(image_name)) * divide_rate):]
 
-image_output_train = os.path.join(root_path, 'icecream_train/JPEGImages')
+image_output_train = os.path.join(
+    cfgs.ROOT_PATH, 'data/{}_train/JPEGImages'.format(cfgs.DATASET_NAME))
 mkdir(image_output_train)
-image_output_test = os.path.join(root_path, 'icecream_test/JPEGImages')
+image_output_test = os.path.join(
+    cfgs.ROOT_PATH, 'data/{}_test/JPEGImages'.format(cfgs.DATASET_NAME))
 mkdir(image_output_test)
 
-xml_train = os.path.join(root_path, 'icecream_train/Annotations')
+xml_train = os.path.join(cfgs.ROOT_PATH, 'data/{}_train/Annotations'.format(cfgs.DATASET_NAME))
 mkdir(xml_train)
-xml_test = os.path.join(root_path, 'icecream_test/Annotations')
+xml_test = os.path.join(cfgs.ROOT_PATH, 'data/{}_test/Annotations'.format(cfgs.DATASET_NAME))
 mkdir(xml_test)
 
 
 count = 0
 for i in train_image:
-    shutil.copy(os.path.join(image_path, i + '.jpg'), image_output_train)
-    if os.path.exists(os.path.join(xml_path, i + '.xml')):
-        shutil.copy(os.path.join(xml_path, i + '.xml'), xml_train)
-    if count % 1000 == 0:
-        print("process step {}".format(count))
-    count += 1
+  shutil.copy(os.path.join(image_path, i + '.jpg'), image_output_train)
+  if os.path.exists(os.path.join(xml_path, i + '.xml')):
+    shutil.copy(os.path.join(xml_path, i + '.xml'), xml_train)
+  if count % 1000 == 0:
+    print("process step {}".format(count))
+  count += 1
 
 for i in test_image:
-    shutil.copy(os.path.join(image_path, i + '.jpg'), image_output_test)
-    shutil.copy(os.path.join(xml_path, i + '.xml'), xml_test)
-    if count % 1000 == 0:
-        print("process step {}".format(count))
-    count += 1
+  shutil.copy(os.path.join(image_path, i + '.jpg'), image_output_test)
+  shutil.copy(os.path.join(xml_path, i + '.xml'), xml_test)
+  if count % 1000 == 0:
+    print("process step {}".format(count))
+  count += 1
