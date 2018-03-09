@@ -10,11 +10,14 @@ from tqdm import tqdm
 from libs.configs import cfgs
 
 template_file = 'sample.xml'
-target_dir = os.path.join(cfgs.ROOT_PATH, 'data/layer/Annotations/')
-image_dir = os.path.join(cfgs.ROOT_PATH, 'data/layer/JPEGImages/')
-anno_dir = os.path.join(cfgs.ROOT_PATH, 'data/layer/annotations/')
+target_dir = os.path.join(cfgs.ROOT_PATH, 'data/{}/Annotations/'.format(cfgs.DATASET_NAME))
+image_dir = os.path.join(cfgs.ROOT_PATH, 'data/{}/JPEGImages/'.format(cfgs.DATASET_NAME))
+anno_dir = os.path.join(cfgs.ROOT_PATH, 'data/{}/annotations/'.format(cfgs.DATASET_NAME))
 
 anno_files = [os.path.join(anno_dir, f) for f in os.listdir(anno_dir) if f.endswith('.txt')]
+
+if not os.path.exists(target_dir):
+  os.makedirs(target_dir)
 
 for af in tqdm(anno_files):
   with open(af) as f:

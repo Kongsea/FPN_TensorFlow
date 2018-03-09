@@ -57,6 +57,12 @@ elif cfgs.DATASET_NAME == 'layer':
 CUDA_VISIBLE_DEVICES=1 python tools/train.py
 ```
 ## 4.Run `tools/test.py`, `tools/eval.py` and `tools/demo.py` to test, evaluate the model and run a demo using the trained model
+* Before running, first modify `tools/restore_model.py` to refer to the right model
+```Shell
+if test:
+    checkpoint_path = os.path.join(
+        cfgs.ROOT_PATH, 'output/res101_trained_weights/v1_layer/layer_70000model.ckpt')
+```
 
 # Error may encountered
 

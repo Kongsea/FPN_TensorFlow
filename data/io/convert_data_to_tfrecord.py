@@ -12,15 +12,15 @@ import tensorflow as tf
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 
 from help_utils.tools import *
+from libs.configs import cfgs
 from libs.label_name_dict.label_dict import *
 
-tf.app.flags.DEFINE_string('VOC_dir', 'data/layer/', 'Voc dir')
+tf.app.flags.DEFINE_string('VOC_dir', 'data/{}/'.format(cfgs.DATASET_NAME), 'Voc dir')
 tf.app.flags.DEFINE_string('xml_dir', 'Annotations', 'xml dir')
 tf.app.flags.DEFINE_string('image_dir', 'JPEGImages', 'image dir')
 tf.app.flags.DEFINE_string('save_name', 'train', 'save name')
 tf.app.flags.DEFINE_string('save_dir', cfgs.ROOT_PATH + '/data/tfrecords/', 'save name')
 tf.app.flags.DEFINE_string('img_format', '.jpg', 'format of image')
-tf.app.flags.DEFINE_string('dataset', 'layer', 'dataset')
 FLAGS = tf.app.flags.FLAGS
 
 
@@ -89,7 +89,7 @@ def convert_pascal_to_tfrecord():
 
   xml_path = FLAGS.VOC_dir + FLAGS.xml_dir
   image_path = FLAGS.VOC_dir + FLAGS.image_dir
-  save_path = FLAGS.save_dir + FLAGS.dataset + '_' + FLAGS.save_name + '.tfrecord'
+  save_path = FLAGS.save_dir + cfgs.DATASET_NAME + '_' + FLAGS.save_name + '.tfrecord'
   mkdir(FLAGS.save_dir)
 
   # writer_options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.ZLIB)
@@ -97,7 +97,7 @@ def convert_pascal_to_tfrecord():
   writer = tf.python_io.TFRecordWriter(path=save_path)
 
   xmls = [os.path.join(xml_path, f).replace('jpg', 'xml')
-          for f in os.listdir(image_path) if int(f[:6]) > 200200]
+          for f in os.listdir(image_path) if int(f[:6]) > 100030]
 
   print('{} in train...'.format(len(xmls)))
 
@@ -142,7 +142,7 @@ def convert_pascal_to_test_tfrecord():
 
   xml_path = FLAGS.VOC_dir + FLAGS.xml_dir
   image_path = FLAGS.VOC_dir + FLAGS.image_dir
-  save_path = FLAGS.save_dir + FLAGS.dataset + '_' + 'test' + '.tfrecord'
+  save_path = FLAGS.save_dir + cfgs.DATASET_NAME + '_' + 'test' + '.tfrecord'
   mkdir(FLAGS.save_dir)
 
   # writer_options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.ZLIB)
@@ -150,7 +150,7 @@ def convert_pascal_to_test_tfrecord():
   writer = tf.python_io.TFRecordWriter(path=save_path)
 
   xmls = [os.path.join(xml_path, f).replace('jpg', 'xml')
-          for f in os.listdir(image_path) if int(f[:6]) <= 200200]
+          for f in os.listdir(image_path) if int(f[:6]) <= 100030]
 
   print('{} in test...'.format(len(xmls)))
 

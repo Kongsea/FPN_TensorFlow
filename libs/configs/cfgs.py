@@ -11,7 +11,7 @@ INFERENCE_IMAGE_PATH = ROOT_PATH + '/tools/inference_image'
 INFERENCE_SAVE_PATH = ROOT_PATH + '/tools/inference_result'
 
 NET_NAME = 'resnet_v1_101'
-DATASET_NAME = 'layer'
+DATASET_NAME = 'shelf'
 VERSION = 'v1_{}'.format(DATASET_NAME)
 CLASS_NUM = 1
 BASE_ANCHOR_SIZE_LIST = [15, 25, 40, 60, 80]

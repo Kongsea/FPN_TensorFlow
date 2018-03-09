@@ -80,8 +80,8 @@ def read_and_prepocess_single_img(filename_queue, shortside_len, is_training):
 
 
 def next_batch(dataset_name, batch_size, shortside_len, is_training):
-  if dataset_name not in ['nwpu', 'airplane', 'SSDD', 'ship', 'pascal', 'coco', 'layer']:
-    raise ValueError('dataSet name must be in pascal, coco or layer')
+  if dataset_name not in ['nwpu', 'airplane', 'SSDD', 'ship', 'pascal', 'coco', 'layer', 'shelf']:
+    raise ValueError('dataSet name must be in pascal, coco, layer or shelf')
 
   if is_training:
     pattern = os.path.join(os.path.join(cfgs.ROOT_PATH, 'data/tfrecords'), dataset_name + '_train*')

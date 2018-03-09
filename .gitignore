@@ -45,6 +45,7 @@ Temporary Items
 # Add
 data/icecream/*
 data/layer/*
+data/shelf/*
 output*/*
 *.xml
 *.jpg

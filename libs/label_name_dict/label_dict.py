@@ -68,6 +68,11 @@ elif cfgs.DATASET_NAME == 'layer':
       'back_ground': 0,
       "层": 1
   }
+elif cfgs.DATASET_NAME == 'shelf':
+  NAME_LABEL_MAP = {
+      'back_ground': 0,
+      "货架分节": 1
+  }
 else:
   assert 'please set label dict!'
 

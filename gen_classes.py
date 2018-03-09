@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 import os
 
-anno_dir = 'data/layer/annotations'
+from libs.configs import cfgs
+
+anno_dir = 'data/{}/annotations'.format(cfgs.DATASET_NAME)
 
 anno_files = [os.path.join(anno_dir, f) for f in os.listdir(anno_dir) if f.endswith('txt')]
 
