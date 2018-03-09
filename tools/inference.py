@@ -1,29 +1,31 @@
 # -*- coding:utf-8 -*-
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import division
+from __future__ import absolute_import, division, print_function
+
 import sys
-sys.path.append('../')
-import tensorflow as tf
-import numpy as np
-import cv2
 import time
+
+import cv2
+import numpy as np
+import tensorflow as tf
+
+sys.path.append('../')
+
 from data.io import image_preprocess
+from help_utils.help_utils import draw_box_cv
+from help_utils.tools import *
+from libs.configs import cfgs
+from libs.fast_rcnn import build_fast_rcnn
 from libs.networks.network_factory import get_network_byname
 from libs.rpn import build_rpn
-from libs.fast_rcnn import build_fast_rcnn
-from help_utils.help_utils import draw_box_cv
-from libs.configs import cfgs
 from tools import restore_model
-from help_utils.tools import *
 
 
 def get_imgs():
   mkdir(cfgs.INFERENCE_IMAGE_PATH)
   root_dir = cfgs.INFERENCE_IMAGE_PATH
   img_name_list = os.listdir(root_dir)
-  if len(img_name_list) == 0:
+  if not img_name_list:
     assert 'no test image in {}!'.format(cfgs.INFERENCE_IMAGE_PATH)
   img_list = [cv2.imread(os.path.join(root_dir, img_name))
               for img_name in img_name_list]

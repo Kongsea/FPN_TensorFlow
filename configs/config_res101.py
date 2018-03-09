@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import tensorflow as tf
 
@@ -69,13 +67,13 @@ tf.app.flags.DEFINE_float(
 ########################
 tf.app.flags.DEFINE_integer(
     'max_steps',
-    50000,
+    70000,
     'max iterate steps'
 )
 
 tf.app.flags.DEFINE_string(
     'pretrained_model_path',
-    '/home/konghaiyang/kong/pretrained_models/resnet_v1_101.ckpt',
+    'data/pretrained_weights/resnet_v1_101.ckpt',
     # 'output-1/res101_trained_weights/v1_layer/voc_50000model.ckpt',
     'the path of pretrained weights'
 )

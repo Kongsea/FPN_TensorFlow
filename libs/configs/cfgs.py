@@ -11,7 +11,8 @@ INFERENCE_IMAGE_PATH = ROOT_PATH + '/tools/inference_image'
 INFERENCE_SAVE_PATH = ROOT_PATH + '/tools/inference_result'
 
 NET_NAME = 'resnet_v1_101'
-VERSION = 'v1_layer'
+DATASET_NAME = 'layer'
+VERSION = 'v1_{}'.format(DATASET_NAME)
 CLASS_NUM = 1
 BASE_ANCHOR_SIZE_LIST = [15, 25, 40, 60, 80]
 LEVEL = ['P2', 'P3', 'P4', 'P5', "P6"]
@@ -23,14 +24,12 @@ ANCHOR_RATIOS = [0.1, 0.2, 0.3]
 SCALE_FACTORS = [10., 5., 1., 0.5]
 OUTPUT_STRIDE = 16
 SHORT_SIDE_LEN = 640
-DATASET_NAME = 'layer'
 
 BATCH_SIZE = 1
 WEIGHT_DECAY = {'resnet_v1_50': 0.0001, 'resnet_v1_101': 0.0001}
 EPSILON = 1e-5
 MOMENTUM = 0.9
 MAX_ITERATION = 70000
-GPU_GROUP = "1"
 LR = 0.001
 
 # rpn

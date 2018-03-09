@@ -1,7 +1,7 @@
 # Clone and modified from https://github.com/yangxue0827/FPN_Tensorflow
+## Deleted some huge files from git source to keep it clean and easy to use.
 
-Deleted some huge files from git source to keep it clean and easy to use.
-
+# How to use this repository to train your model using your own custom dataset
 ## 1.Place your dataset files in `data/` folders, named `layer` for example
 ### 1.1 Place original images in `data/layer/JPEGImages` folder
 ### 1.2 Place original annotations in `data/layer/annotations` folder
@@ -14,15 +14,14 @@ Deleted some huge files from git source to keep it clean and easy to use.
 ```Shell
 NET_NAME = 'resnet_v1_101'
 DATASET_NAME = 'layer'
-VERSION = 'v1_layer'
+VERSION = 'v1_{}'.format(DATASET_NAME)
 ANCHOR_SCALES = [0.5, 1., 2.]
-ANCHOR_RATIOS = [0.1, 0.2, 0.3, 0.5] #height to width
+ANCHOR_RATIOS = [0.1, 0.2, 0.3] # height to width
 SCALE_FACTORS = [10., 5., 1., 0.5]
-GPU_GROUP = "1"
 ```
 * Classes
 ```Shell
-CLASS_NUM = 1 #Equal to really class number (except background class)
+CLASS_NUM = 1 #Equal to really class number (except for background class)
 ```
 ### 2.2 Modify configure file in folder `configs` according to NET_NAME
 * `configs/config_res101.py`
@@ -35,11 +34,36 @@ batch_size
 ```Shell
 ['nwpu', 'airplane', 'SSDD', 'ship', 'pascal', 'coco', 'layer']
 ```
-## Run `tools/train.py` to train the model and the `output` will be saved in the root directory
+## 3.Run `tools/train.py` to train the model and the `output` will be saved in the root directory
 ```Shell
 CUDA_VISIBLE_DEVICES=1 python tools/train.py
 ```
-## Run `tools/test.py`, `tools/eval.py` and `tools/demo.py` to test, evaluate the model and run a demo using the trained model
+## 4.Run `tools/test.py`, `tools/eval.py` and `tools/demo.py` to test, evaluate the model and run a demo using the trained model
+
+# Error may encountered
+
+## 1.InvalidArgumentError (see above for traceback): LossTensor is inf or nan : Tensor had NaN values
+```Shell
+InvalidArgumentError (see above for traceback): LossTensor is inf or nan : Tensor had NaN values
+	 [[Node: train_op/CheckNumerics = CheckNumerics[T=DT_FLOAT, message="LossTensor is inf or nan", _device="/job:localhost/replica:0/task:0/device:GPU:0"](control_dependency)]]
+	 [[Node: gradients/rpn_net/concat_grad/Squeeze_3/_1493 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_8085_gradients/rpn_net/concat_grad/Squeeze_3", tensor_type=DT_INT64, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+```
+* This was raised because the annotations were beyond the images, for example, xmax or ymax larger than width or height of image, or xmin or ymin less than 0.
+* This error has been solved by adding these lines in `data/io/convert_data_to_tfrecord.py`:
+```Shell
+xmin = np.where(xmin < 0, 0, xmin)
+ymin = np.where(ymin < 0, 0, ymin)
+xmax = np.where(xmax > img_width, img_width, xmax)
+ymax = np.where(ymax > img_height, img_height, ymax)
+```
+
+## 2.tensorflow.python.framework.errors_impl.UnknownError: exceptions.OverflowError: signed integer is less than minimum
+```Shell
+UnknownError (see above for traceback): exceptions.OverflowError: signed integer is less than minimum
+	 [[Node: fast_rcnn_loss/PyFunc_1 = PyFunc[Tin=[DT_FLOAT, DT_FLOAT, DT_INT32], Tout=[DT_UINT8], token="pyfunc_7", _device="/job:localhost/replica:0/task:0/device:CPU:0"](rpn_losses/Squeeze/_1579, fast_rcnn_loss/mul_1/_1759, fast_rcnn_loss/strided_slice_1/_1761)]]
+	 [[Node: draw_proposals/Reshape_2/tensor/_1825 = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device_incarnation=1, tensor_name="edge_3802_draw_proposals/Reshape_2/tensor", tensor_type=DT_UINT8, _device="/job:localhost/replica:0/task:0/device:GPU:0"]()]]
+```
+* The reason of this error is same as `1.InvalidArgumentError`
 
 # Feature Pyramid Networks for Object Detection
 A Tensorflow implementation of FPN detection framework.
