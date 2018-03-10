@@ -14,11 +14,10 @@ RESTORE_FROM_RPN = True
 FLAGS = get_flags_byname(cfgs.NET_NAME)
 
 
-def get_restorer(test=True):
+def get_restorer(test=True, checkpoint_path=None):
 
   if test:
-    checkpoint_path = os.path.join(
-        cfgs.ROOT_PATH, 'output/res101_trained_weights/v1_layer/layer_70000model.ckpt')
+    assert checkpoint_path != None, "When testing, checkpoint must be set."
   else:
     checkpoint_path = tf.train.latest_checkpoint(
         os.path.join(FLAGS.trained_checkpoint, cfgs.VERSION))

@@ -128,6 +128,7 @@ def train():
                                                                    scores=fast_rcnn_score)
 
     # train
+    added_loss = rpn_total_loss + fast_rcnn_total_loss
     total_loss = tf.losses.get_total_loss()
 
     global_step = tf.train.get_or_create_global_step()
@@ -156,6 +157,7 @@ def train():
     tf.summary.scalar('fast_rcnn/fast_rcnn_classification_loss', fast_rcnn_classification_loss)
     tf.summary.scalar('fast_rcnn/fast_rcnn_total_loss', fast_rcnn_total_loss)
 
+    tf.summary.scalar('loss/added_loss', added_loss)
     tf.summary.scalar('loss/total_loss', total_loss)
 
     tf.summary.image('rpn/rpn_all_boxes', rpn_proposals_boxes_in_img)
@@ -183,7 +185,8 @@ def train():
       coord = tf.train.Coordinator()
       threads = tf.train.start_queue_runners(sess, coord)
 
-      summary_path = os.path.join(FLAGS.summary_path, cfgs.VERSION)
+      summary_path = os.path.join('output/{}'.format(cfgs.DATASET_NAME),
+                                  FLAGS.summary_path, cfgs.VERSION)
       mkdir(summary_path)
       summary_writer = tf.summary.FileWriter(summary_path, graph=sess.graph)
 
@@ -193,10 +196,10 @@ def train():
 
         _global_step, _img_name_batch, _rpn_location_loss, _rpn_classification_loss, \
             _rpn_total_loss, _fast_rcnn_location_loss, _fast_rcnn_classification_loss, \
-            _fast_rcnn_total_loss, _total_loss, _ = \
+            _fast_rcnn_total_loss, _added_loss, _total_loss, _ = \
             sess.run([global_step, img_name_batch, rpn_location_loss, rpn_classification_loss,
                       rpn_total_loss, fast_rcnn_location_loss, fast_rcnn_classification_loss,
-                      fast_rcnn_total_loss, total_loss, train_op])
+                      fast_rcnn_total_loss, added_loss, total_loss, train_op])
 
         end = time.time()
 
@@ -204,25 +207,28 @@ def train():
           print("""{}: step{} image_name:{}
                      rpn_loc_loss:{:.4f} | rpn_cla_loss:{:.4f} | rpn_total_loss:{:.4f}
                      fast_rcnn_loc_loss:{:.4f} | fast_rcnn_cla_loss:{:.4f} | fast_rcnn_total_loss:{:.4f}
-                     total_loss:{:.4f} | pre_cost_time:{:.4f}s"""
+                     added_loss:{:.4f} | total_loss:{:.4f} | pre_cost_time:{:.4f}s"""
                 .format(training_time, _global_step, str(_img_name_batch[0]), _rpn_location_loss,
                         _rpn_classification_loss, _rpn_total_loss, _fast_rcnn_location_loss,
-                        _fast_rcnn_classification_loss, _fast_rcnn_total_loss, _total_loss,
+                        _fast_rcnn_classification_loss, _fast_rcnn_total_loss, _added_loss, _total_loss,
                         (end - start)))
 
-        if step % 1000 == 0:
+        if step % 500 == 0:
           summary_str = sess.run(summary_op)
           summary_writer.add_summary(summary_str, _global_step)
           summary_writer.flush()
 
         if (step > 0 and step % 5000 == 0) or (step == cfgs.MAX_ITERATION - 1):
-          save_dir = os.path.join(FLAGS.trained_checkpoint, cfgs.VERSION)
+          save_dir = os.path.join('output/{}'.format(cfgs.DATASET_NAME),
+                                  FLAGS.trained_checkpoint, cfgs.VERSION)
           mkdir(save_dir)
 
           save_ckpt = os.path.join(save_dir, '{}_'.format(
               cfgs.DATASET_NAME)+str(_global_step)+'model.ckpt')
           saver.save(sess, save_ckpt)
-          print('Weights had been saved to {}.'.format(save_dir))
+          print('Weights had been saved to {}.'.format(save_ckpt))
+
+      print('Training done.')
 
       coord.request_stop()
       coord.join(threads)

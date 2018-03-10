@@ -74,10 +74,10 @@ def read_xml_gtbox_and_label(xml_path):
   xmin, ymin, xmax, ymax, label = gtbox_label[:, 0], gtbox_label[:, 1], gtbox_label[:, 2],\
       gtbox_label[:, 3], gtbox_label[:, 4]
 
-  xmin = np.where(xmin < 0, 0, xmin)
-  ymin = np.where(ymin < 0, 0, ymin)
-  xmax = np.where(xmax > img_width, img_width, xmax)
-  ymax = np.where(ymax > img_height, img_height, ymax)
+  xmin = np.where(xmin <= 0, 1, xmin)
+  ymin = np.where(ymin <= 0, 1, ymin)
+  xmax = np.where(xmax >= img_width, img_width-1, xmax)
+  ymax = np.where(ymax >= img_height, img_height-1, ymax)
 
   # [ymin, xmin, ymax, xmax, label]
   gtbox_label = np.transpose(np.stack([ymin, xmin, ymax, xmax, label], axis=0))
@@ -97,7 +97,7 @@ def convert_pascal_to_tfrecord():
   writer = tf.python_io.TFRecordWriter(path=save_path)
 
   xmls = [os.path.join(xml_path, f).replace('jpg', 'xml')
-          for f in os.listdir(image_path) if int(f[:6]) > 100030]
+          for f in os.listdir(image_path) if int(f[:6]) > 200200]
 
   print('{} in train...'.format(len(xmls)))
 
@@ -150,7 +150,7 @@ def convert_pascal_to_test_tfrecord():
   writer = tf.python_io.TFRecordWriter(path=save_path)
 
   xmls = [os.path.join(xml_path, f).replace('jpg', 'xml')
-          for f in os.listdir(image_path) if int(f[:6]) <= 100030]
+          for f in os.listdir(image_path) if int(f[:6]) <= 200200]
 
   print('{} in test...'.format(len(xmls)))
 

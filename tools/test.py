@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from __future__ import absolute_import, division, print_function
 
+import argparse
 import os
 import sys
 import time
@@ -22,7 +23,23 @@ from libs.rpn import build_rpn
 from tools import restore_model
 
 
-def test(img_num):
+def parse_args():
+  """
+  Parse input arguments
+  """
+  parser = argparse.ArgumentParser(description='Test FPN')
+  parser.add_argument('--weights', dest='weights',
+                      help='trained model weights',
+                      default=None, type=str)
+  parser.add_argument('--img_num', dest='img_num',
+                      help='test image numbers',
+                      default=None, type=int)
+
+  args = parser.parse_args()
+  return args
+
+
+def test(args):
   with tf.Graph().as_default():
 
     # img = tf.placeholder(shape=[None, None, 3], dtype=tf.uint8)
@@ -106,7 +123,7 @@ def test(img_num):
         tf.local_variables_initializer()
     )
 
-    restorer, restore_ckpt = restore_model.get_restorer()
+    restorer, restore_ckpt = restore_model.get_restorer(checkpoint_path=args.weights)
 
     config = tf.ConfigProto()
     # config.gpu_options.per_process_gpu_memory_fraction = 0.5
@@ -120,7 +137,7 @@ def test(img_num):
       coord = tf.train.Coordinator()
       threads = tf.train.start_queue_runners(sess, coord)
 
-      for _ in tqdm(range(img_num)):
+      for _ in tqdm(range(args.img_num)):
 
         _img_name_batch, _img_batch, _gtboxes_and_label_batch, _fast_rcnn_decode_boxes, \
             _fast_rcnn_score, _detection_category \
@@ -153,5 +170,5 @@ def test(img_num):
 
 
 if __name__ == '__main__':
-  img_num = 20
-  test(img_num)
+  args = parse_args()
+  test(args)

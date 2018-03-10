@@ -87,12 +87,12 @@ tf.app.flags.DEFINE_float(
 ##################################
 tf.app.flags.DEFINE_string(
     'summary_path',
-    'output/res101_summary',
+    'res101_summary',
     'the path of summary write to '
 )
 tf.app.flags.DEFINE_string(
     'trained_checkpoint',
-    'output/res101_trained_weights',
+    'res101_trained_weights',
     'the path to save trained_weights'
 )
 FLAGS = tf.app.flags.FLAGS

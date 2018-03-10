@@ -58,5 +58,7 @@ events*
 *model.ckpt*
 *.tfrecord
 
+logs
+
 .vscode
 .env
