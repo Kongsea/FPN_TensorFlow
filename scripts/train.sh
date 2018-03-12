@@ -3,7 +3,7 @@
 # ./scripts/train.sh GPU
 #
 # Example:
-# ./scripts/train.sh 0
+# ./scripts/train.sh 0 coca
 
 set -x
 set -e

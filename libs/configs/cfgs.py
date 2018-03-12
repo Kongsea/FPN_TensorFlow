@@ -11,17 +11,17 @@ INFERENCE_IMAGE_PATH = ROOT_PATH + '/tools/inference_image'
 INFERENCE_SAVE_PATH = ROOT_PATH + '/tools/inference_result'
 
 NET_NAME = 'resnet_v1_101'
-DATASET_NAME = 'shelf'
+DATASET_NAME = 'cooler'
 VERSION = 'v1_{}'.format(DATASET_NAME)
-CLASS_NUM = 1
+CLASS_NUM = 700  # exclude background
 BASE_ANCHOR_SIZE_LIST = [15, 25, 40, 60, 80]
 LEVEL = ['P2', 'P3', 'P4', 'P5', "P6"]
 STRIDE = [4, 8, 16, 32, 64]
-ANCHOR_SCALES = [0.5, 1., 2.]
-# ANCHOR_RATIOS = [1, 0.5, 2, 1 / 3., 3., 1.5, 1 / 1.5]
-ANCHOR_RATIOS = [0.1, 0.2, 0.3]
-# SCALE_FACTORS = [10., 10., 5., 5.]
-SCALE_FACTORS = [10., 5., 1., 0.5]
+# ANCHOR_SCALES = [1., 5., 10.]
+ANCHOR_SCALES = [2., 3., 4.]
+# ANCHOR_RATIOS = [0.05, 0.1, 0.2]
+ANCHOR_RATIOS = [2., 3., 4., 5.]
+SCALE_FACTORS = [10., 10., 5., 5.]
 OUTPUT_STRIDE = 16
 SHORT_SIDE_LEN = 640
 
@@ -29,7 +29,7 @@ BATCH_SIZE = 1
 WEIGHT_DECAY = {'resnet_v1_50': 0.0001, 'resnet_v1_101': 0.0001}
 EPSILON = 1e-5
 MOMENTUM = 0.9
-MAX_ITERATION = 70000
+MAX_ITERATION = 50000
 LR = 0.001
 
 # rpn

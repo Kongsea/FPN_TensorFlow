@@ -3,8 +3,9 @@
 
 # Train a model using your own custom dataset
 ## 1.Place your dataset files in `data/` folders, named `layer` for example
-### 1.1 Place original images in `data/layer/JPEGImages` folder
-### 1.2 Place original annotations in `data/layer/annotations` folder
+### 1.1 Place original images in `data/layer/JPEGImages` folder.
+### 1.2 Place original annotations in `data/layer/annotations` folder.
+### 1.3 Run `gen_classes.py` to generate classes file named `classes.txt` in `data/layer/` folder.
 ### 1.3 Run `convert_txt2xml.py` to convert txt annotations to xml ones from folder `data/layer/annotations` to folder `data/layer/Annotations`.
 ### 1.4 Run `data/io/convert_data_to_tfrecord.py` to convert images and annotations to tfrecords files which located in folder `data/tfrecords`.
 * run `tools/test.py` to label ground truth annotations on images to check if the data are right.
@@ -36,7 +37,7 @@ batch_size
 ```
 ### 2.4 Add your `NAME_LABEL_MAP` corresponding to your own dataset in `libs/label_name_dict/label_dict.py`
 * Directly add them if the number of classes is not big
-* Or Run `gen_classes.py` to generate classes in `classes.txt` and add `NAME_LABEL_MAP` using a file.
+* Or add `NAME_LABEL_MAP` using generated `data/layer/classes.txt` file.
 * Examples:
 ```Shell
 elif cfgs.DATASET_NAME == 'icecream':
@@ -52,19 +53,26 @@ elif cfgs.DATASET_NAME == 'layer':
       "layer": 1
   }
 ```
-## 3.Run `tools/train.py` to train the model and the `output` will be saved in the root directory
+## 3.Run `scripts/train.sh` to train the model and the `output` and `logs` will be saved in the root directory
 ```Shell
-CUDA_VISIBLE_DEVICES=1 python tools/train.py
+cd $ FPN_Tensorflow
+# ./scripts/train.sh GPU DATASET
+./scripts/train.sh 0 cooler
 ```
-## 4.Run `tools/test.py`, `tools/eval.py` and `tools/demo.py` to test, evaluate the model and run a demo using the trained model
-* Before running, first modify `tools/restore_model.py` to refer to the right model
+## 4.Run `scripts/[test.sh, eval.sh, demo.sh, inference.sh]` to test, evaluate the model or run a demo using the trained model
 ```Shell
-if test:
-    checkpoint_path = os.path.join(
-        cfgs.ROOT_PATH, 'output/res101_trained_weights/v1_layer/layer_70000model.ckpt')
+cd $ FPN_Tensorflow
+# ./scripts/test.sh GPU MODEL_PATH IMG_NUM
+./scripts/test.sh 0 output/res101_trained_weights/v1_layer/layer_model.ckpt 20
+# ./scripts/eval.sh GPU MODEL_PATH IMG_NUM
+./scripts/eval.sh 0 output/res101_trained_weights/v1_layer/layer_model.ckpt 20
+# ./scripts/demo.sh GPU MODEL_PATH
+./scripts/demo.sh 0 output/res101_trained_weights/v1_layer/layer_model.ckpt
+# ./scripts/inference.sh GPU MODEL_PATH
+./scripts/inference.sh 0 output/res101_trained_weights/v1_layer/layer_model.ckpt
 ```
 
-# Error may encountered
+# Errors may encountered
 
 ## 1.InvalidArgumentError (see above for traceback): LossTensor is inf or nan : Tensor had NaN values
 ```Shell

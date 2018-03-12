@@ -226,7 +226,7 @@ def train():
           save_ckpt = os.path.join(save_dir, '{}_'.format(
               cfgs.DATASET_NAME)+str(_global_step)+'model.ckpt')
           saver.save(sess, save_ckpt)
-          print('Weights had been saved to {}.'.format(save_ckpt))
+          print('Weights have been saved to {}.'.format(save_ckpt))
 
       print('Training done.')
 

@@ -23,6 +23,8 @@ tf.app.flags.DEFINE_string('save_dir', cfgs.ROOT_PATH + '/data/tfrecords/', 'sav
 tf.app.flags.DEFINE_string('img_format', '.jpg', 'format of image')
 FLAGS = tf.app.flags.FLAGS
 
+split = int('200100')
+
 
 def _int64_feature(value):
   return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
@@ -85,6 +87,20 @@ def read_xml_gtbox_and_label(xml_path):
   return img_height, img_width, gtbox_label
 
 
+def read_image(path):
+  txt_path = path.replace('JPEGImages', 'annotations').replace('jpg', 'txt')
+  with open(txt_path) as f:
+    line = f.readlines()[0]
+  flag = True if line.startswith('rotate') else False
+  im = cv2.imread(path)
+  if flag:
+    rotate = int(line.strip().split()[1])
+    rot_mat = cv2.getRotationMatrix2D((im.shape[1] / 2, im.shape[0] / 2), rotate, 1)
+    im = cv2.warpAffine(im, rot_mat, (im.shape[1], im.shape[0]))
+
+  return im
+
+
 def convert_pascal_to_tfrecord():
 
   xml_path = FLAGS.VOC_dir + FLAGS.xml_dir
@@ -97,7 +113,7 @@ def convert_pascal_to_tfrecord():
   writer = tf.python_io.TFRecordWriter(path=save_path)
 
   xmls = [os.path.join(xml_path, f).replace('jpg', 'xml')
-          for f in os.listdir(image_path) if int(f[:6]) > 200200]
+          for f in os.listdir(image_path) if not f.startswith('.') and int(f[:6]) > split]
 
   print('{} in train...'.format(len(xmls)))
 
@@ -117,7 +133,8 @@ def convert_pascal_to_tfrecord():
       img_height, img_width, gtbox_label = read_xml_gtbox_and_label(xml)
 
       # img = np.array(Image.open(img_path))
-      img = cv2.imread(img_path)
+      # img = cv2.imread(img_path)
+      img = read_image(img_path)
 
       feature = tf.train.Features(feature={
           # maybe do not need encode() in linux
@@ -150,7 +167,7 @@ def convert_pascal_to_test_tfrecord():
   writer = tf.python_io.TFRecordWriter(path=save_path)
 
   xmls = [os.path.join(xml_path, f).replace('jpg', 'xml')
-          for f in os.listdir(image_path) if int(f[:6]) <= 200200]
+          for f in os.listdir(image_path) if not f.startswith('.') and int(f[:6]) <= split]
 
   print('{} in test...'.format(len(xmls)))
 
@@ -170,7 +187,8 @@ def convert_pascal_to_test_tfrecord():
       img_height, img_width, gtbox_label = read_xml_gtbox_and_label(xml)
 
       # img = np.array(Image.open(img_path))
-      img = cv2.imread(img_path)
+      # img = cv2.imread(img_path)
+      img = read_image(img_path)
 
       feature = tf.train.Features(feature={
           # maybe do not need encode() in linux

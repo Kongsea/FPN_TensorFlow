@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function
 
+import argparse
 import os
 import pickle
 import sys
@@ -23,7 +24,7 @@ from tools import restore_model
 FLAGS = get_flags_byname(cfgs.NET_NAME)
 
 
-def eval_dict_convert(img_num):
+def eval_dict_convert(args):
   with tf.Graph().as_default():
 
     img_name_batch, img_batch, gtboxes_and_label_batch, num_objects_batch = \
@@ -105,7 +106,7 @@ def eval_dict_convert(img_num):
         tf.local_variables_initializer()
     )
 
-    restorer, restore_ckpt = restore_model.get_restorer()
+    restorer, restore_ckpt = restore_model.get_restorer(checkpoint_path=args.weights)
 
     config = tf.ConfigProto()
     # config.gpu_options.per_process_gpu_memory_fraction = 0.5
@@ -122,7 +123,7 @@ def eval_dict_convert(img_num):
       gtbox_dict = {}
       predict_dict = {}
 
-      for i in range(img_num):
+      for i in range(args.img_num):
 
         start = time.time()
 
@@ -156,7 +157,8 @@ def eval_dict_convert(img_num):
                 [temp_boxes, temp_score], axis=1), np.float64)
             predict_dict[str(_img_name_batch[0])].append(temp_dict)
 
-        view_bar('{} image cost {}s'.format(str(_img_name_batch[0]), (end - start)), i + 1, img_num)
+        view_bar('{} image cost {}s'.format(
+            str(_img_name_batch[0]), (end - start)), i + 1, args.img_num)
 
       fw1 = open('gtboxes_dict.pkl', 'w')
       fw2 = open('predict_dict.pkl', 'w')
@@ -291,9 +293,37 @@ def eval(rboxes, gboxes, iou_th, use_07_metric):
   return rec, prec, ap, box_num
 
 
-if __name__ == '__main__':
-  img_num = 200
-  eval_dict_convert(img_num)
+def parse_args():
+  """
+  Parse input arguments
+  """
+  parser = argparse.ArgumentParser(description='Evaluate a trained FPN model')
+  parser.add_argument('--src_folder', dest='src_folder',
+                      help='images path',
+                      default='{}/tools/inference_image'.format(cfgs.ROOT_PATH), type=str)
+  parser.add_argument('--des_folder', dest='des_folder',
+                      help='output path',
+                      default='{}/tools/image_out'.format(cfgs.ROOT_PATH), type=str)
+  parser.add_argument('--weights', dest='weights',
+                      help='model path',
+                      type=str)
+  parser.add_argument('--img_num', dest='img_num',
+                      help='image numbers',
+                      default=20, type=int)
+
+  if len(sys.argv) == 1:
+    parser.print_help()
+    sys.exit(1)
+
+  args = parser.parse_args()
+  return args
+
+
+if __name__ == "__main__":
+  args = parse_args()
+  print('Called with args:')
+  print(args)
+  eval_dict_convert(args)
 
   fr1 = open('predict_dict.pkl', 'r')
   fr2 = open('gtboxes_dict.pkl', 'r')

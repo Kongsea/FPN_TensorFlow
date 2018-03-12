@@ -2,6 +2,8 @@
 
 from __future__ import absolute_import, division, print_function
 
+import argparse
+import os
 import sys
 import time
 
@@ -10,6 +12,7 @@ import numpy as np
 import tensorflow as tf
 
 sys.path.append('../')
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from data.io import image_preprocess
 from help_utils.help_utils import draw_box_cv
@@ -32,7 +35,7 @@ def get_imgs():
   return img_list, img_name_list
 
 
-def inference():
+def inference(args):
   with tf.Graph().as_default():
 
     img_plac = tf.placeholder(shape=[None, None, 3], dtype=tf.uint8)
@@ -114,7 +117,7 @@ def inference():
         tf.local_variables_initializer()
     )
 
-    restorer, restore_ckpt = restore_model.get_restorer()
+    restorer, restore_ckpt = restore_model.get_restorer(checkpoint_path=args.weights)
 
     config = tf.ConfigProto()
     # config.gpu_options.per_process_gpu_memory_fraction = 0.5
@@ -152,5 +155,25 @@ def inference():
       coord.join(threads)
 
 
-if __name__ == '__main__':
-  inference()
+def parse_args():
+  """
+  Parse input arguments
+  """
+  parser = argparse.ArgumentParser(description='Inference using trained FPN model.')
+  parser.add_argument('--weights', dest='weights',
+                      help='model path',
+                      type=str)
+
+  if len(sys.argv) == 1:
+    parser.print_help()
+    sys.exit(1)
+
+  args = parser.parse_args()
+  return args
+
+
+if __name__ == "__main__":
+  args = parse_args()
+  print('Called with args:')
+  print(args)
+  inference(args)

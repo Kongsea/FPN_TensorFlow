@@ -73,6 +73,20 @@ elif cfgs.DATASET_NAME == 'shelf':
       'back_ground': 0,
       "货架分节": 1
   }
+elif cfgs.DATASET_NAME == 'coca':
+  NAME_LABEL_MAP = {}
+  NAME_LABEL_MAP['back_ground'] = 0
+  with open('data/{}/classes.txt'.format(cfgs.DATASET_NAME)) as f:
+    lines = [line.strip() for line in f.readlines()]
+  for i, line in enumerate(lines, 1):
+    NAME_LABEL_MAP[line] = i
+elif cfgs.DATASET_NAME == 'cooler':
+  NAME_LABEL_MAP = {}
+  NAME_LABEL_MAP['back_ground'] = 0
+  with open('data/{}/classes.txt'.format(cfgs.DATASET_NAME)) as f:
+    lines = [line.strip() for line in f.readlines()]
+  for i, line in enumerate(lines, 1):
+    NAME_LABEL_MAP[line] = i
 else:
   assert 'please set label dict!'
 

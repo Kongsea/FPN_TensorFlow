@@ -50,12 +50,13 @@ def draw_box_cv(img, boxes, labels, scores):
     label = labels[i]
     if label != 0:
       num_of_object += 1
-      color = (np.random.randint(255), np.random.randint(255), np.random.randint(255))
+      # color = (np.random.randint(255), np.random.randint(255), np.random.randint(255))
+      color = (0, 0, 255)
       cv2.rectangle(img,
                     pt1=(xmin, ymin),
                     pt2=(xmax, ymax),
                     color=color,
-                    thickness=2)
+                    thickness=1)
       category = LABEl_NAME_MAP[label]
 
       # if scores is not None:
@@ -88,8 +89,8 @@ def draw_box_cv(img, boxes, labels, scores):
               text=str(num_of_object),
               org=((img.shape[1]) // 2, (img.shape[0]) // 2),
               fontFace=3,
-              fontScale=1,
-              color=(255, 0, 0))
+              fontScale=3,
+              color=(255, 255, 255))
   return img
 
 

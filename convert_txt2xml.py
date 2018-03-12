@@ -16,14 +16,21 @@ target_dir = os.path.join(cfgs.ROOT_PATH, 'data/{}/Annotations/'.format(cfgs.DAT
 image_dir = os.path.join(cfgs.ROOT_PATH, 'data/{}/JPEGImages/'.format(cfgs.DATASET_NAME))
 anno_dir = os.path.join(cfgs.ROOT_PATH, 'data/{}/annotations/'.format(cfgs.DATASET_NAME))
 
-anno_files = [os.path.join(anno_dir, f) for f in os.listdir(anno_dir) if f.endswith('.txt')]
+anno_files = [os.path.join(anno_dir, f) for f in os.listdir(
+    anno_dir) if f.endswith('.txt') and not f.startswith('.')]
 
 if not os.path.exists(target_dir):
   os.makedirs(target_dir)
 
 for af in tqdm(anno_files):
+  if not os.path.exists(af):
+    continue
+
   with open(af) as f:
     anno_lines = [f.strip() for f in f.readlines()]
+
+  if not anno_lines:
+    continue
 
   image_file = af.rpartition('/')[-1].replace('txt', 'jpg')
 
@@ -68,4 +75,4 @@ for af in tqdm(anno_files):
 
   tree.write(target_dir + xml_file, encoding='utf-8', xml_declaration=True)
 
-print 'Done'
+print('Done')

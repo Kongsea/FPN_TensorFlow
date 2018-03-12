@@ -436,13 +436,16 @@ def parse_args():
   """
   Parse input arguments
   """
-  parser = argparse.ArgumentParser(description='Train a Fast R-CNN network')
+  parser = argparse.ArgumentParser(description='Run a demo using trained FPN model.')
   parser.add_argument('--src_folder', dest='src_folder',
                       help='images path',
                       default='{}/tools/inference_image'.format(cfgs.ROOT_PATH), type=str)
   parser.add_argument('--des_folder', dest='des_folder',
                       help='output path',
                       default='{}/tools/image_out'.format(cfgs.ROOT_PATH), type=str)
+  parser.add_argument('--weights', dest='model_weights',
+                      help='model path',
+                      type=str)
   parser.add_argument('--det_th', dest='det_th',
                       help='detection threshold',
                       default=0.7,
@@ -457,9 +460,9 @@ def parse_args():
                       help='image format',
                       default='.jpg', type=str)
 
-#   if len(sys.argv) == 1:
-#     parser.print_help()
-#     sys.exit(1)
+  if len(sys.argv) == 1:
+    parser.print_help()
+    sys.exit(1)
 
   args = parser.parse_args()
   return args
